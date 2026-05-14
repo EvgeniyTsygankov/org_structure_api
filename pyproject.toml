@@ -1,0 +1,56 @@
+[tool.black]
+line-length = 79
+target-version = ["py311"]
+skip-string-normalization = true
+extend-exclude = '''
+/(
+  migrations
+  | static
+  | settings\.py
+  | \.venv
+  | venv
+)/
+'''
+
+[tool.ruff]
+line-length = 79
+indent-width = 4
+target-version = "py311"
+fix = false
+exclude = [
+  "venv",
+  ".venv",
+  "migrations",
+  "settings.py",
+  "__pycache__",
+  "static",
+]
+
+[tool.ruff.lint]
+preview = true
+select = [
+    "UP",   # pyupgrade
+    "I",    # isort
+    "E",    # flake8-errors
+    "W",    # flake8-warnings
+    "F",    # flake8-pyflakes
+    "D",    # flake8-docstrings
+    "B",    # flake8-bugbear
+    "C4",   # flake8-comprehensions
+    "S",    # flake8-bandit
+    "BLE",  # flake8-blind-except
+    "T20",  # flake8-print
+    "T10",  # flake8-debugger
+    "PT",   # flake8-pytest-style
+    "RUF",  # Ruff
+    "DJ",   # django
+    "DTZ",  # flake8-datetimez
+    "ERA",  # eradicate
+    "FURB", # refurb
+    "TRY",  # try/except best practices
+    "PL",   # pylint rules
+    "SIM",  # simplicity rules
+]
+
+[tool.ruff.lint.isort]
+known-first-party = ["api", "company", "conftest"]
