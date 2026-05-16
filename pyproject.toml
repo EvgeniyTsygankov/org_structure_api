@@ -28,6 +28,7 @@ exclude = [
 
 [tool.ruff.lint]
 preview = true
+ignore = ["RUF001", "TRY003"]
 select = [
     "UP",   # pyupgrade
     "I",    # isort
@@ -52,5 +53,9 @@ select = [
     "SIM",  # simplicity rules
 ]
 
+[tool.ruff.format]
+quote-style = "single"
+
 [tool.ruff.lint.isort]
+combine-as-imports = true
 known-first-party = ["api", "company", "conftest"]
