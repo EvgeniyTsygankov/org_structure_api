@@ -28,7 +28,7 @@ exclude = [
 
 [tool.ruff.lint]
 preview = true
-ignore = ["RUF001", "TRY003"]
+ignore = ["RUF001", "RUF002", "TRY003"]
 select = [
     "UP",   # pyupgrade
     "I",    # isort
