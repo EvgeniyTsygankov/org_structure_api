@@ -2,7 +2,7 @@
 
 from django.db import models
 
-from company.constants import (
+from core.constants import (
     DEPARTMENT_NAME_MAX_LEN,
     EMPLOYEE_FULL_NAME_MAX_LEN,
     EMPLOYEE_POSITION_MAX_LEN,
