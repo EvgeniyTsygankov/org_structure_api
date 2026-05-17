@@ -76,17 +76,6 @@ class DepartmentCreateSerializer(DepartmentBaseSerializer):
 
         pass
 
-    def validate(self, attrs: dict[str, Any]) -> dict[str, Any]:
-        """Валидация при создании нового подразделения."""
-        attrs = super().validate(attrs)
-
-        name: str = attrs.get('name', '')
-        parent: Department | None = attrs.get('parent')
-
-        validate_unique_name_per_parent(name, parent)
-
-        return attrs
-
 
 class DepartmentUpdateSerializer(DepartmentBaseSerializer):
     """Сериализатор для обновления подразделений."""

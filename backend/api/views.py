@@ -22,6 +22,7 @@ from api.validators import (
     validate_department_deletion,
     validate_no_circular_dependency,
     validate_not_self_parent,
+    validate_unique_name_per_parent,
 )
 from company.models import Department, Employee
 from core.constants import MAX_DEPTH
@@ -36,15 +37,23 @@ class DepartmentCreateView(CreateAPIView):
     serializer_class = DepartmentCreateSerializer
 
     def perform_create(self, serializer: DepartmentCreateSerializer) -> None:
-        """Связываем создаваемое подразделение с родителем из JSON-body."""
+        """Создание подразделения с валидацией имени.
+
+        Связывает объект с родителем и проверяет уникальность.
+        """
         request: Request = self.request  # type: ignore[assignment]
         data = request.data if isinstance(request.data, dict) else {}
+
+        name: str = data.get('name', '').strip()
         parent_id = data.get('parent_id')
 
         if parent_id:
             parent_department = get_object_or_404(Department, id=parent_id)
+            validate_unique_name_per_parent(name, parent_department)
+
             serializer.save(parent=parent_department)
         else:
+            validate_unique_name_per_parent(name, None)
             serializer.save()
 
 
