@@ -13,31 +13,31 @@ class Department(models.Model):
     """Модель подразделения."""
 
     name = models.CharField(
-        verbose_name="Подразделение",
+        verbose_name='Подразделение',
         max_length=DEPARTMENT_NAME_MAX_LEN,
         blank=False,
     )
     parent = models.ForeignKey(
-        "self",
+        'self',
         on_delete=models.CASCADE,
-        verbose_name="Родительское подразделение",
+        verbose_name='Родительское подразделение',
         blank=True,
         null=True,
-        related_name="children",
+        related_name='children',
     )
     created_at = models.DateTimeField(
-        verbose_name="Дата создания",
+        verbose_name='Дата создания',
         auto_now_add=True,
     )
 
     class Meta:
         """Мета-класс для модели подразделения."""
 
-        ordering = ("name",)
+        ordering = ('name',)
         constraints = (
             models.UniqueConstraint(
-                fields=["parent", "name"],
-                name="unique_name_per_parent",
+                fields=['parent', 'name'],
+                name='unique_name_per_parent',
             ),
         )
 
@@ -58,25 +58,26 @@ class Employee(models.Model):
     department = models.ForeignKey(
         Department,
         on_delete=models.CASCADE,
-        verbose_name="Подразделение",
+        verbose_name='Подразделение',
+        related_name='employees',
     )
     full_name = models.CharField(
-        verbose_name="Сотрудник",
+        verbose_name='Сотрудник',
         max_length=EMPLOYEE_FULL_NAME_MAX_LEN,
         blank=False,
     )
     position = models.CharField(
-        verbose_name="Должность",
+        verbose_name='Должность',
         max_length=EMPLOYEE_POSITION_MAX_LEN,
         blank=False,
     )
     hired_at = models.DateField(
-        verbose_name="Дата найма",
+        verbose_name='Дата найма',
         null=True,
         blank=True,
     )
     created_at = models.DateTimeField(
-        verbose_name="Дата создания",
+        verbose_name='Дата создания',
         auto_now_add=True,
     )
 
