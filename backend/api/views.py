@@ -1,5 +1,6 @@
 """Представления для api приложения."""
 
+import logging
 from typing import Any
 
 from django.db import transaction
@@ -24,6 +25,8 @@ from api.validators import (
 )
 from company.models import Department, Employee
 from core.constants import MAX_DEPTH
+
+logger = logging.getLogger('api')
 
 
 class DepartmentCreateView(CreateAPIView):
@@ -144,6 +147,7 @@ class DepartmentDetailUpdateDeleteView(RetrieveUpdateDestroyAPIView):
     ) -> Response:
         """Перехватываем PATCH-запрос для ручного обновления связи."""
         instance: Department = self.get_object()
+        old_parent_id = instance.parent_id
 
         serializer = self.get_serializer(
             instance, data=request.data, partial=True
@@ -158,11 +162,18 @@ class DepartmentDetailUpdateDeleteView(RetrieveUpdateDestroyAPIView):
                 instance.parent = None
             else:
                 parent_department = get_object_or_404(Department, id=parent_id)
-
                 validate_not_self_parent(instance, parent_department)
                 validate_no_circular_dependency(instance, parent_department)
-
                 instance.parent = parent_department
+
+            logger.info(
+                "Подразделение '%s' (ID: %d) перемещено. "
+                'Старый parent_id: %s, Новый parent_id: %s',
+                instance.name,
+                instance.pk,
+                old_parent_id,
+                parent_id,
+            )
 
         serializer.save()
         return Response(serializer.data)
@@ -183,13 +194,30 @@ class DepartmentDetailUpdateDeleteView(RetrieveUpdateDestroyAPIView):
         )
 
         if mode == 'cascade':
+            emp_count = instance.employees.count()
+            logger.warning(
+                "Каскадное удаление подразделения '%s' (ID: %d) и его "
+                '%d сотрудников.',
+                instance.name,
+                instance.pk,
+                emp_count,
+            )
             instance.delete()
 
         elif mode == 'reassign' and reassign_id is not None:
             with transaction.atomic():
-                Employee.objects.filter(department=instance).update(
-                    department_id=reassign_id
+                emp_queryset = Employee.objects.filter(department=instance)
+                emp_count = emp_queryset.count()
+
+                emp_queryset.update(department_id=reassign_id)
+                logger.info(
+                    'Переведено %d сотрудников из удаляемого подразделения '
+                    'ID: %d в подразделение ID: %d',
+                    emp_count,
+                    instance.pk,
+                    reassign_id,
                 )
+
                 instance.delete()
 
         return Response(status=status.HTTP_204_NO_CONTENT)
