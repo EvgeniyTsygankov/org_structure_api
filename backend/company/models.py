@@ -1,5 +1,7 @@
 """Модели для приложения company."""
 
+from typing import Any
+
 from django.db import models
 
 from core.constants import (
@@ -41,11 +43,11 @@ class Department(models.Model):
             ),
         )
 
-    def __str__(self):
+    def __str__(self) -> str:
         """Строковое представление названия подразделения."""
         return self.name
 
-    def save(self, *args, **kwargs):
+    def save(self, *args: Any, **kwargs: Any) -> None:
         """Тримминг пробелов в названии подразделения."""
         if self.name:
             self.name = self.name.strip()
@@ -81,6 +83,6 @@ class Employee(models.Model):
         auto_now_add=True,
     )
 
-    def __str__(self):
+    def __str__(self) -> str:
         """Строковое представление сотрудника."""
         return self.full_name
