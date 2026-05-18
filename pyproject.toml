@@ -54,9 +54,19 @@ select = [
     "SIM",  # simplicity rules
 ]
 
-[tool.ruff.format]
-quote-style = "single"
-
 [tool.ruff.lint.isort]
 combine-as-imports = true
 known-first-party = ["api", "core","company", "conftest"]
+
+[tool.ruff.lint.per-file-ignores]
+"**/test_*.py" = ["S101"]
+"**/tests.py" = ["S101"]
+"conftest.py" = ["S101"]
+
+[tool.ruff.format]
+quote-style = "single"
+
+[tool.pytest.ini_options]
+DJANGO_SETTINGS_MODULE = "core.settings"
+python_files = ["test_*.py", "*_test.py"]
+addopts = "--ds=core.settings --reuse-db"
