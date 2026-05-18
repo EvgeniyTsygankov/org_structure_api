@@ -66,8 +66,3 @@ known-first-party = ["api", "core","company", "conftest"]
 
 [tool.ruff.format]
 quote-style = "single"
-
-[tool.pytest.ini_options]
-DJANGO_SETTINGS_MODULE = "core.settings"
-python_files = ["tests.py"]
-addopts = "--ds=core.settings --reuse-db"
