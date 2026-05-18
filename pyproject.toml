@@ -68,5 +68,5 @@ quote-style = "single"
 
 [tool.pytest.ini_options]
 DJANGO_SETTINGS_MODULE = "core.settings"
-python_files = ["test_*.py", "*_test.py"]
+python_files = ["tests.py"]
 addopts = "--ds=core.settings --reuse-db"
