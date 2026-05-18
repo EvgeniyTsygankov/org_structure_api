@@ -29,7 +29,6 @@ DEBUG = True
 
 ALLOWED_HOSTS = os.getenv('DJANGO_ALLOWED_HOSTS', 'localhost').split(',')
 
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -40,9 +39,21 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "rest_framework",
+    "drf_spectacular",
     "company",
     "api",
 ]
+
+REST_FRAMEWORK = {
+    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
+}
+
+SPECTACULAR_SETTINGS = {
+    "TITLE": "Departments API",
+    "DESCRIPTION": "API for departments and employees",
+    "VERSION": "1.0.0",
+}
+
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
